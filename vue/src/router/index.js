@@ -43,7 +43,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !store.getters.getUser) {
-    next({ name: "Membership" });
+    next({ name: "Login" });
   } else {
     next();
   }
