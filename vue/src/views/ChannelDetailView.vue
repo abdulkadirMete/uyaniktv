@@ -1,7 +1,7 @@
 <template>
   <div
     :class="$style.container"
-    @mouseenter="this.$store.commit('toggleDropdown', false)"
+    @mouseenter="store.commit('toggleDropdown', false)"
   >
     <PlayerHeading
       :channelImg="store.getters.getSingleChannel.img"

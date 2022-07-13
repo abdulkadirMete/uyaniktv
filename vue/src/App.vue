@@ -10,7 +10,7 @@ store.dispatch("setUserIfExist");
 <template>
   <Navigation />
   <!-- utils -->
-  <loading v-if="this.$store.getters.getShowLoading" />
+  <loading v-if="store.getters.getShowLoading" />
   <notifications position="top left" />
   <!-- end of utils -->
   <Aside />

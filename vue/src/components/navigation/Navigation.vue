@@ -10,14 +10,14 @@
         <NavigationSearch />
         <MobileSearchButtonVue />
         <button
-          v-if="!this.$store.getters.getUser"
+          v-if="!store.getters.getUser"
           @click="redirectLogin"
           class="btnPrimary"
           :class="$style.loginButton"
         >
           Giriş Yap
         </button>
-        <OptionsMenu v-if="this.$store.getters.getUser" />
+        <OptionsMenu v-if="store.getters.getUser" />
       </div>
     </div>
   </nav>
@@ -33,6 +33,8 @@ import {
 import MobileSearchButtonVue from "./subComponents/mobileButtons/MobileSearchButton.vue";
 import NavigationSearch from "./subComponents/NavigationSearch.vue";
 import OptionsMenu from "./subComponents/OptionsMenu.vue";
+import store from "../../store";
+
 
 export default {
   components: {
@@ -51,7 +53,7 @@ export default {
     };
     // get user
 
-    return { redirectLogin};
+    return { redirectLogin,store};
   },
 };
 </script>
