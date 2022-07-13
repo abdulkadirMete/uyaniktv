@@ -1,0 +1,33 @@
+.VuePagination {
+  display: flex;
+  justify-content: center;
+}
+
+.page-link {
+  background-color: var(--color-divider-bg);
+  padding: 0.5rem 0.75rem;
+  color: var(--color-pale-white);
+  border: none;
+  font-weight: 600;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-l);
+  border: 3px solid var(--color-highlight-text);
+}
+
+.VuePagination__pagination {
+  display: flex;
+  margin-top: 40px;
+  column-gap: 0.3rem;
+  align-items: center;
+  width: 100%;
+}
+
+.VuePagination__count {
+  display: none;
+}
+
+.active {
+  background-color: #e83737;
+  border-radius: var(--border-radius-sm);
+  color: var(--color-white);
+}
