@@ -21,7 +21,7 @@ return [
 
     'allowed_methods' => ['POST', 'GET', 'DELETE', 'PUT', '*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'https://master--uyaniktv.netlify.app/', 'https://uyaniktv.herokuapp.com'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => ['*'],
 
