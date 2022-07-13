@@ -17,13 +17,15 @@ return [
 
     'paths' => ['*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'paths' => ['api/*', 'api/admin/*', 'api/users/*', '*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_methods' => ['POST', 'GET', 'DELETE', 'PUT', '*'],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins' => ['http://localhost:3000', 'https://master--uyaniktv.netlify.app/', 'https://uyaniktv.herokuapp.com'],
 
-    'allowed_headers' => ['*'],
+    'allowed_origins_patterns' => ['Google'],
+
+    'allowed_headers' => ['X-Custom-Header', 'Upgrade-Insecure-Requests', '*'],
 
     'exposed_headers' => [],
 
