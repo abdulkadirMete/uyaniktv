@@ -23,7 +23,7 @@ return [
 
     'allowed_origins' => ['http://localhost:3000', 'https://master--uyaniktv.netlify.app/', 'https://uyaniktv.herokuapp.com'],
 
-    'allowed_origins_patterns' => ['Google'],
+    'allowed_origins_patterns' => ['*'],
 
     'allowed_headers' => ['X-Custom-Header', 'Upgrade-Insecure-Requests', '*'],
 
