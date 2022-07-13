@@ -18,3 +18,7 @@ Route::post('/kaydol', [AuthController::class, 'register']);
 Route::post('/giris', [AuthController::class, 'login']);
 Route::get('/kanallar', [ChannelController::class, 'getAllChannels']);
 Route::get('/canli-izle/{id}', [ChannelController::class, 'getSingleChannel']);
+
+header('Access-Control-Allow-Origin:  *');
+header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, PATCH, DELETE');
+header('Access-Control-Allow-Headers: Accept, Content-Type, X-Auth-Token, Origin, Authorization');
