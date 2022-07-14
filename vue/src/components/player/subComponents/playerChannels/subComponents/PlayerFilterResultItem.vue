@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="`/canli-izle/${id}`" :class="$style.container" replace>
+    <div :class="$style.container" replace>
         <div :class="$style.resultGroup">
             <div :class="$style.resultImgContainer">
                 <img
@@ -8,23 +8,47 @@
                     :class="$style.resultImg"
                 />
             </div>
-            <div :class="$style.infoGroup">
+            <router-link :to="`/canli-izle/${id}`" :class="$style.infoGroup">
                 <span :class="$style.channelName">{{ channel.title }}</span>
                 <div :class="$style.streamInfoGroup"></div>
-            </div>
+            </router-link>
         </div>
         <!-- icon -->
         <font-awesome-icon
-            icon="fa-solid fa-circle-plus"
-            :class="$style.icon"
+            :icon="
+                selected
+                    ? 'fa-solid fa-circle-check'
+                    : 'fa-solid fa-circle-plus'
+            "
+            @click="handleSelect"
+            :class="[$style.icon, { [$style.selected]: selected }]"
         />
-    </router-link>
+    </div>
 </template>
 <script>
+import { notify } from "@kyvg/vue3-notification";
+import { notifyMaker } from "../../../../../helpers/helpers";
+import { ref } from "vue";
+import store from "../../../../../store";
 export default {
     props: {
         channel: Object,
         id: Number,
+    },
+    setup(props) {
+        const selected = ref(false);
+
+        const handleSelect = () => {
+            console.log(props.id);
+            selected.value = !selected.value;
+            if (selected.value) {
+                notify(notifyMaker("Kanal listenize eklendi", "success"));
+            } else {
+                notify(notifyMaker("Kanal listenizden kaldırıldı", "warning"));
+            }
+        };
+
+        return { selected, handleSelect };
     },
 };
 </script>
@@ -73,5 +97,9 @@ export default {
 .icon {
     font-size: var(--small-icon-size);
     color: var(--color-divider-bg);
+}
+
+.selected {
+    color: var(--color-success-green);
 }
 </style>

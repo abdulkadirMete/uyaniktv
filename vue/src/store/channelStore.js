@@ -34,12 +34,16 @@ const channelStore = {
             });
         },
         fetchSingleChannel: ({ commit }, id) => {
-            console.log("work with", id);
             return axiosClient.get(`/canli-izle/${id}`).then(({ data }) => {
                 commit("setSingleChannel", data[0]);
                 return data[0];
             });
         },
+        // addUserChannelList: ({ commit }, id) => {
+        //     return axiosClient.post(`/listeme-ekle/${id}`).then(({ data }) => {
+        //         return data.success;
+        //     });
+        // },
     },
     getters: {
         getChannels: (state) => {

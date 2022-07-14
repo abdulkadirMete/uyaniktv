@@ -12,14 +12,19 @@
                     placeholder="Kanalları Filtrele"
                     v-model="phrase"
                     @blur="() => (showResults = false)"
-                    @focus="() => (showResults = true)"
+                    @focus="
+                        () => {
+                            showResults = true;
+                            phrase = '';
+                        }
+                    "
                 />
             </div>
             <div :class="$style.toggleGroup">
-                <Toggle v-model="value" />
+                <Toggle v-model="isShowList"/>
             </div>
         </div>
-        <CustomListHeading :heading="value ? 'Listem' : 'Tüm Kanallar'" />
+        <CustomListHeading :heading="isShowList ? 'Listem' : 'Tüm Kanallar'" />
         <!-- filter list -->
         <div :class="$style.channelList">
             <PlayerFilterResultItem
@@ -33,31 +38,48 @@
 </template>
 <script setup>
 import Toggle from "@vueform/toggle";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
+import store from "../../../../../store";
 import CustomListHeading from "./CustomListHeading.vue";
 import PlayerFilterResultItem from "./PlayerFilterResultItem.vue";
-import store from "../../../../../store";
-import { watch } from "vue";
 
-const value = ref(false);
+const isShowList = ref(false);
 const phrase = ref("");
-const hasFilter = ref(false);
 let channels = ref([]);
+const myList = JSON.parse(localStorage.getItem("mylist")) || [];
 
-watch(
-    phrase,
-    (newVal, oldVal) => {
+// filter process
+watchEffect(
+    () => {
         channels.value = [];
-        if (newVal) {
-            const tmpArray = store.getters.getChannels.filter((channel, _) =>
-                channel.title.toUpperCase().includes(newVal.toUpperCase())
-            );
-            channels.value.push(...tmpArray);
+        if (isShowList.value) {
+            // favorite channels
+            if (phrase.value) {
+                const tmpArray = myList.filter((channel, _) =>
+                    channel.title
+                        .toUpperCase()
+                        .includes(phrase.value.toUpperCase())
+                );
+                channels.value.push(...tmpArray);
+            } else {
+                channels.value.push(myList);
+            }
         } else {
-            channels.value.push(...store.getters.getChannels);
+            // all channels
+            if (phrase.value) {
+                const tmpArray = store.getters.getChannels.filter(
+                    (channel, _) =>
+                        channel.title
+                            .toUpperCase()
+                            .includes(phrase.value.toUpperCase())
+                );
+                channels.value.push(...tmpArray);
+            } else {
+                channels.value.push(...store.getters.getChannels);
+            }
         }
     },
-    { immediate: true }
+    { immediate: true, deep: true }
 );
 </script>
 
