@@ -4,10 +4,10 @@
         @mouseenter="store.commit('toggleDropdown', false)"
     >
         <PlayerHeading
-            :channelImg="store.getters.getSingleChannel.img"
-            :channelName="store.getters.getSingleChannel.title"
+            :channelImg="store.getters.getSingleChannel?.img"
+            :channelName="store.getters.getSingleChannel?.title"
         />
-        <Player :streamUrl="store.getters.getSingleChannel.streamLink" />
+        <Player :streamUrl="store.getters.getSingleChannel?.streamLink" />
     </div>
 </template>
 <script>
