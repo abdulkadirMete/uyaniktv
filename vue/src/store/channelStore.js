@@ -34,6 +34,7 @@ const channelStore = {
             });
         },
         fetchSingleChannel: ({ commit }, id) => {
+            console.log("work with", id);
             return axiosClient.get(`/canli-izle/${id}`).then(({ data }) => {
                 commit("setSingleChannel", data[0]);
                 return data[0];

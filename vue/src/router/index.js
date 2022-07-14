@@ -7,46 +7,50 @@ import RegisterForm from "../components/authForms/RegisterForm.vue";
 import store from "../store";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: "/",
-      name: "Home",
-      component: HomeView,
-      children: [
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
         {
-          name: "Register",
-          path: "kaydol",
-          component: RegisterForm,
+            path: "/",
+            name: "Home",
+            component: HomeView,
+            children: [
+                {
+                    name: "Register",
+                    path: "kaydol",
+                    component: RegisterForm,
+                    meta: { notNeedIfUserExist: true },
+                },
+                {
+                    name: "Login",
+                    path: "giris",
+                    component: LoginForm,
+                    meta: { notNeedIfUserExist: true },
+                },
+            ],
         },
         {
-          name: "Login",
-          path: "giris",
-          component: LoginForm,
+            path: "/uyelik",
+            name: "Membership",
+            component: ShoppingView,
         },
-      ],
-    },
-    {
-      path: "/uyelik",
-      name: "Membership",
-      component: ShoppingView,
-    },
 
-    {
-      path: "/canli-izle/:id",
-      name: "ChannelDetail",
-      component: ChannelDetailView,
-      meta: { requiresAuth: true },
-    },
-  ],
+        {
+            path: "/canli-izle/:id",
+            name: "ChannelDetail",
+            component: ChannelDetailView,
+            meta: { requiresAuth: true },
+        },
+    ],
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !store.getters.getUser) {
-    next({ name: "Login" });
-  } else {
-    next();
-  }
+    if (to.meta.requiresAuth && !store.getters.getUser) {
+        next({ name: "Login" });
+    } else if (to.meta.notNeedIfUserExist && store.getters.getSession) {
+        next({ name: "Home" });
+    } else {
+        next();
+    }
 });
 
 export default router;

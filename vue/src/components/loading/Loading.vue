@@ -23,7 +23,7 @@ export default {};
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
   z-index: 99;
 }

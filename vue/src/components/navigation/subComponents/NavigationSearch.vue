@@ -5,7 +5,7 @@
             :class="$style.searchIcon"
         />
         <!-- search results -->
-        <div :class="$style.searchResults" v-if="needShowResults">
+        <div :class="[$style.searchResults, { [$style.show]: showResults }]">
             <SearchResultItem
                 v-for="(channel, index) in store.getters.getSearchResults"
                 :key="index"
@@ -23,34 +23,22 @@
         />
     </div>
 </template>
-<script>
+<script setup>
 import store from "../../../store";
 import SearchResultItem from "./SearchResultItem.vue";
-export default {
-    data() {
-        return { store, phrase: "", showResults: false };
-    },
+import { ref, watch } from "vue";
 
-    components: { SearchResultItem },
-    watch: {
-        phrase: function () {
-            if (this.phrase.length > 2) {
-                store.commit("searchChannel", this.phrase);
-            } else {
-                store.commit("clearSearchResults");
-            }
-        },
-    },
-    methods: {
-        needShowResults() {
-            return (
-                showResults &&
-                store.getters.getSearchResults?.length > 0 &&
-                !store.getters.getShowDropdown
-            );
-        },
-    },
-};
+const phrase = ref("");
+const showResults = ref(false);
+
+watch(phrase, (newVal, _) => {
+    if (newVal.length > 2) {
+        store.commit("searchChannel", newVal);
+    } else {
+        store.commit("clearSearchResults");
+    }
+});
+
 </script>
 <style module>
 .searchGroup {
@@ -88,14 +76,18 @@ export default {
     background-color: var(--color-divider-bg);
     top: calc(var(--nav-height) - 18px);
     right: 0;
-    padding: 0.5rem;
     max-height: 500px;
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
     transition: all 0.3s ease-in;
-    border-radius: var(--border-radius-md);
     overflow-y: scroll;
+    max-height: 0px;
+    transition: all 0.3s ease-out;
+}
+
+.show {
+    max-height: 650px;
 }
 
 @media screen and (max-width: 1068px) {
@@ -109,6 +101,7 @@ export default {
 <!-- <style>
 .searchGroup::-webkit-scrollbar-track {
   color: var(--color-divider-bg);
+  
 }
 
 .searchGroup::-webkit-scrollbar-thumb {
