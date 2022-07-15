@@ -21,17 +21,21 @@
                 />
             </div>
             <div :class="$style.toggleGroup">
-                <Toggle v-model="isShowList"/>
+                <Toggle v-model="doNeedShowList" />
             </div>
         </div>
-        <CustomListHeading :heading="isShowList ? 'Listem' : 'Tüm Kanallar'" />
+        <CustomListHeading
+            :heading="doNeedShowList ? 'Listem' : 'Tüm Kanallar'"
+        />
         <!-- filter list -->
         <div :class="$style.channelList">
             <PlayerFilterResultItem
                 v-for="channel in channels"
                 :channel="channel"
                 :key="channel.id"
-                :id="channel.id"
+                :favoriteChannels="favoriteChannels"
+                @addItem="addItem"
+                @removeItem="removeItem"
             />
         </div>
     </div>
@@ -43,26 +47,44 @@ import store from "../../../../../store";
 import CustomListHeading from "./CustomListHeading.vue";
 import PlayerFilterResultItem from "./PlayerFilterResultItem.vue";
 
-const isShowList = ref(false);
+const doNeedShowList = ref(false);
 const phrase = ref("");
 let channels = ref([]);
-const myList = JSON.parse(localStorage.getItem("mylist")) || [];
+let favoriteChannels = ref(JSON.parse(localStorage.getItem("MYLIST")) || []);
+
+// save changes
+const updateStorage = () => {
+    localStorage.setItem("MYLIST", JSON.stringify(favoriteChannels.value));
+};
+
+// add channel to storage
+const addItem = (channel) => {
+    favoriteChannels.value.push(channel);
+    updateStorage();
+};
+// remove channel from storage
+const removeItem = (id) => {
+    favoriteChannels.value = favoriteChannels.value.filter(
+        (channel) => channel.id != id
+    );
+    updateStorage();
+};
 
 // filter process
 watchEffect(
     () => {
         channels.value = [];
-        if (isShowList.value) {
+        if (doNeedShowList.value) {
             // favorite channels
             if (phrase.value) {
-                const tmpArray = myList.filter((channel, _) =>
+                const tmpArray = favoriteChannels.value.filter((channel, _) =>
                     channel.title
                         .toUpperCase()
                         .includes(phrase.value.toUpperCase())
                 );
                 channels.value.push(...tmpArray);
             } else {
-                channels.value.push(myList);
+                channels.value.push(...favoriteChannels.value);
             }
         } else {
             // all channels

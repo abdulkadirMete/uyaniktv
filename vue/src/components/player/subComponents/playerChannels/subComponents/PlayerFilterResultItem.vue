@@ -8,7 +8,10 @@
                     :class="$style.resultImg"
                 />
             </div>
-            <router-link :to="`/canli-izle/${id}`" :class="$style.infoGroup">
+            <router-link
+                :to="`/canli-izle/${channel.id}`"
+                :class="$style.infoGroup"
+            >
                 <span :class="$style.channelName">{{ channel.title }}</span>
                 <div :class="$style.streamInfoGroup"></div>
             </router-link>
@@ -16,39 +19,50 @@
         <!-- icon -->
         <font-awesome-icon
             :icon="
-                selected
+                isItInList
                     ? 'fa-solid fa-circle-check'
                     : 'fa-solid fa-circle-plus'
             "
             @click="handleSelect"
-            :class="[$style.icon, { [$style.selected]: selected }]"
+            :class="[$style.icon, { [$style.selected]: isItInList }]"
         />
     </div>
 </template>
 <script>
 import { notify } from "@kyvg/vue3-notification";
+import { ref, onBeforeMount } from "vue";
 import { notifyMaker } from "../../../../../helpers/helpers";
-import { ref } from "vue";
-import store from "../../../../../store";
+
 export default {
     props: {
         channel: Object,
-        id: Number,
+        favoriteChannels: Array,
     },
-    setup(props) {
-        const selected = ref(false);
-
+    setup(props, { emit }) {
+        const isItInList = ref(false);
+        // check channels if already listed
+        onBeforeMount(() => {
+            for (const channel of props.favoriteChannels) {
+                if (channel.id == props.channel.id) {
+                    isItInList.value = true;
+                    break;
+                }
+            }
+        });
+        // add or remove as select
         const handleSelect = () => {
-            console.log(props.id);
-            selected.value = !selected.value;
-            if (selected.value) {
+            if (!isItInList.value) {
                 notify(notifyMaker("Kanal listenize eklendi", "success"));
+                emit("addItem", props.channel);
+                isItInList.value = true;
             } else {
                 notify(notifyMaker("Kanal listenizden kaldırıldı", "warning"));
+                emit("removeItem", props.channel.id);
+                isItInList.value = false;
             }
         };
 
-        return { selected, handleSelect };
+        return { handleSelect, isItInList };
     },
 };
 </script>

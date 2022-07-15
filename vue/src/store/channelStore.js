@@ -39,6 +39,7 @@ const channelStore = {
                 return data[0];
             });
         },
+
         // addUserChannelList: ({ commit }, id) => {
         //     return axiosClient.post(`/listeme-ekle/${id}`).then(({ data }) => {
         //         return data.success;
