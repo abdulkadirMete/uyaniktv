@@ -263,12 +263,12 @@ export default {
 
         //toggle screen
         const toggleScreen = () => {
-            isFullScreen.value = !isFullScreen.value;
-
-            if (isFullScreen.value) {
+            if (!isFullScreen.value && document.fullscreenElement === null) {
                 mainContainerRef.value.requestFullscreen();
+                isFullScreen.value = true;
             } else {
                 document.exitFullscreen();
+                isFullScreen.value = false;
             }
         };
 
@@ -303,14 +303,12 @@ export default {
         const keyListiner = (event) => {
             const key = event.key;
             //   play pause
-            console.log(key);
             if (key === " ") {
                 isPlay.value ? pause() : play();
             }
             // esc
-            if (key === "Backspace") {
+            if (key === "Escape") {
                 console.log("escape");
-                toggleScreen();
             }
         };
         // add listiner
