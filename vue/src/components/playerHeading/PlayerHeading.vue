@@ -4,7 +4,7 @@
       <img :src="channelImg" :class="$style.img" alt="channel" />
       <span :class="$style.name">{{ channelName }}</span>
     </div>
-    <button v-if="!hideButton" class="btnSecondary">Kanal Listeme Ekle</button>
+    <button v-if="!hideButton" class="btnSecondary">Sorun Bildir</button>
   </div>
 </template>
 <script>

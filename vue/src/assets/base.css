@@ -250,14 +250,14 @@ img {
 
 .btnSecondary {
   border-radius: var(--border-radius-md);
-  border: 1px solid var(--color-gray);
-  background-color: var(--color-white-soft);
+  border: 1px solid var(--color-brand);
+  background: var(--color-white-soft);
   padding: 10px 16px;
   font-size: var(--font-size-normal);
 }
 
 .btnSecondary:hover {
-  background-color: var(--color-black-mute);
+  background: var(--color-brand-logo-bg);
   color: white;
 }
 
