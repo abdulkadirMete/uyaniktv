@@ -299,6 +299,23 @@ export default {
             streamInfo.value = secondToStringDate(1800 - newTime);
         });
 
+        // specific key listiners
+        const keyListiner = (event) => {
+            const key = event.key;
+            //   play pause
+            console.log(key);
+            if (key === " ") {
+                isPlay.value ? pause() : play();
+            }
+            // esc
+            if (key === "Backspace") {
+                console.log("escape");
+                toggleScreen();
+            }
+        };
+        // add listiner
+        document.addEventListener("keydown", keyListiner);
+
         // hide controllers if need
         let observable;
         onMounted(() => {
@@ -321,7 +338,10 @@ export default {
                 .subscribe();
         });
         // remove subscribe
-        onBeforeUnmount(() => observable.unsubscribe());
+        onBeforeUnmount(() => {
+            observable.unsubscribe();
+            document.removeEventListener("keydown", keyListiner);
+        });
 
         // show tips on hover
         const showTips = (event, text) => {
@@ -556,6 +576,7 @@ export default {
     border-radius: var(--border-radius-sm);
     z-index: 2;
     position: relative;
+    display: none;
 }
 
 .tipText {
