@@ -1,7 +1,17 @@
 <template>
     <div :class="$style.container">
         <StreamDates v-if="!hideControllers" />
-        <div :class="$style.playerContainer" ref="playerContainer">
+        <div :class="$style.playerContainer" ref="mainContainerRef">
+            <!-- show tips  -->
+            <div
+                :class="[$style.tipContainer, { [$style.tipShow]: true }]"
+                ref="tipRef"
+            >
+                <span :class="$style.tipText">{{ tipText }}</span>
+                <div :class="$style.triangle"></div>
+            </div>
+            // end of show tips
+            <!-- end of show tips -->
             <!-- settings indicator -->
             <div
                 :class="[
@@ -60,6 +70,8 @@
                             class="material-symbols-outlined"
                             :class="$style.controllersIcon"
                             @click="rewind(300)"
+                            @mouseover="showTips($event, '5dk geri')"
+                            @mouseleave="hideTips"
                         >
                             replay_5
                         </span>
@@ -68,6 +80,8 @@
                             icon="fa-solid fa-backward-step"
                             :class="$style.controllersIcon"
                             @click="rewind(60)"
+                            @mouseover="showTips($event, '1dk geri')"
+                            @mouseleave="hideTips"
                         />
 
                         <!-- play  -->
@@ -76,6 +90,8 @@
                             icon="fa-solid fa-play"
                             :class="$style.controllersIcon"
                             @click="play"
+                            @mouseover="showTips($event, 'Oynat')"
+                            @mouseleave="hideTips"
                         />
 
                         <!-- pause -->
@@ -85,6 +101,8 @@
                             class="material-symbols-outlined"
                             :class="$style.controllersIcon"
                             @click="pause"
+                            @mouseover="showTips($event, 'Durdur')"
+                            @mouseleave="hideTips"
                         />
 
                         <!-- forward 1 -->
@@ -92,6 +110,8 @@
                             icon="fa-solid fa-forward-step"
                             :class="$style.controllersIcon"
                             @click="forward(60)"
+                            @mouseover="showTips($event, '1dk ileri')"
+                            @mouseleave="hideTips"
                         />
 
                         <!-- forward 5 -->
@@ -99,6 +119,8 @@
                             class="material-symbols-outlined"
                             :class="$style.controllersIcon"
                             @click="forward(300)"
+                            @mouseover="showTips($event, '5dk ileri')"
+                            @mouseleave="hideTips"
                         >
                             forward_5
                         </span>
@@ -110,6 +132,9 @@
                                 v-if="isMute"
                                 class="material-symbols-outlined"
                                 :class="$style.controllersIcon"
+                                @mouseover="showTips($event, 'Sesi Kapat')"
+                                @mouseleave="hideTips"
+                                @click="closeVolume"
                             >
                                 volume_up
                             </span>
@@ -118,6 +143,9 @@
                                 v-else
                                 class="material-symbols-outlined"
                                 :class="[$style.controllersIcon]"
+                                @mouseover="showTips($event, 'Sesi Aç')"
+                                @mouseleave="hideTips"
+                                @click="openVolume"
                             >
                                 volume_off
                             </span>
@@ -144,6 +172,8 @@
                             icon="fa-solid fa-gear"
                             :class="$style.controllersIcon"
                             @click="() => (showIndicator = !showIndicator)"
+                            @mouseover="showTips($event, 'Ayarlar')"
+                            @mouseleave="hideTips"
                         />
 
                         <!-- maximize -->
@@ -152,6 +182,8 @@
                             icon="fa-solid fa-maximize"
                             :class="$style.controllersIcon"
                             @click="toggleScreen"
+                            @mouseover="showTips($event, 'Büyüt')"
+                            @mouseleave="hideTips"
                         />
                         <!-- minimize -->
                         <font-awesome-icon
@@ -159,6 +191,8 @@
                             icon="fa-solid fa-minimize"
                             :class="$style.controllersIcon"
                             @click="toggleScreen"
+                            @mouseover="showTips($event, 'Küçült')"
+                            @mouseleave="hideTips"
                         />
                     </div>
                 </div>
@@ -171,7 +205,7 @@
 <script>
 import Hls from "hls.js";
 import { computed, ref, watch } from "vue";
-import { secondToStringDate } from "../../helpers/helpers";
+import { getElementPosition, secondToStringDate } from "../../helpers/helpers";
 import PlayerChannels from "./subComponents/playerChannels/PlayerChannels.vue";
 import StreamDates from "./subComponents/playerFeatures/StreamDates.vue";
 import { fromEvent, tap, switchMap, timer } from "rxjs";
@@ -188,13 +222,15 @@ export default {
         let isPlay = ref(false);
         const videoRef = ref(null);
         const controllersRef = ref(null);
-        const playerContainer = ref(null);
+        const mainContainerRef = ref(null);
         let volume = ref(30);
         let currentVideoTime = ref(1800);
         let isFullScreen = ref(false);
         let streamInfo = ref("");
         let hideControllers = ref(false);
         let showIndicator = ref(false);
+        let tipText = ref("");
+        let tipRef = ref(null);
 
         // play
         const play = () => {
@@ -230,10 +266,21 @@ export default {
             isFullScreen.value = !isFullScreen.value;
 
             if (isFullScreen.value) {
-                playerContainer.value.requestFullscreen();
+                mainContainerRef.value.requestFullscreen();
             } else {
                 document.exitFullscreen();
             }
+        };
+
+        // open volume
+        const openVolume = () => {
+            volume.value = 50;
+            isMute.value = false;
+        };
+
+        const closeVolume = () => {
+            volume.value = 0;
+            isMute.value = true;
         };
 
         // change volume
@@ -252,29 +299,49 @@ export default {
             streamInfo.value = secondToStringDate(1800 - newTime);
         });
 
+        // hide controllers if need
         let observable;
         onMounted(() => {
             observable = fromEvent(document, "mousemove")
                 .pipe(
                     tap(() => {
-                        console.log("show it!");
                         videoRef.value.classList.remove("hideCursor");
                         controllersRef.value?.classList.remove("hide");
                     }),
                     switchMap((event) =>
                         timer(3000).pipe(
                             tap(() => {
-                                console.log("hideit");
                                 videoRef.value.classList.add("hideCursor");
                                 controllersRef?.value.classList.add("hide");
+                                hideTips();
                             })
                         )
                     )
                 )
                 .subscribe();
         });
-
+        // remove subscribe
         onBeforeUnmount(() => observable.unsubscribe());
+
+        // show tips on hover
+        const showTips = (event, text) => {
+            const position = getElementPosition(
+                event.target,
+                mainContainerRef.value
+            );
+            tipText.value = text;
+            // position
+            tipRef.value.style.position = "absolute";
+            tipRef.value.style.left = position.x + "px";
+            tipRef.value.style.top = 380 + "px";
+            tipRef.value.style.display = "block";
+            // sub half of icon width
+            tipRef.value.style.transform = "translateX(calc(-50% + 12px))";
+        };
+
+        const hideTips = () => {
+            tipRef.value.style.display = "none";
+        };
 
         return {
             play,
@@ -287,13 +354,19 @@ export default {
             changeVolume,
             currentVideoTime,
             toggleScreen,
-            playerContainer,
+            mainContainerRef,
             isFullScreen,
             streamInfo,
             hideControllers,
             showIndicator,
             isMute,
             controllersRef,
+            showTips,
+            tipRef,
+            tipText,
+            hideTips,
+            openVolume,
+            closeVolume,
         };
     },
 };
@@ -444,6 +517,7 @@ export default {
     height: 0;
     overflow: hidden;
     transition: all 0.3s ease-in-out;
+    border-radius: var(--border-radius-sm);
 }
 
 .show {
@@ -473,6 +547,32 @@ export default {
 .indicatorText {
     color: var(--color-light-gray);
     font-size: var(--font-size-l);
+}
+
+/* Tips */
+.tipContainer {
+    background-color: var(--color-light-gray);
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    z-index: 2;
+    position: relative;
+}
+
+.tipText {
+    color: var(--color-black);
+    font-size: var(--font-size-sm);
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top: 10px solid var(--color-light-gray);
 }
 
 /*media querys*/

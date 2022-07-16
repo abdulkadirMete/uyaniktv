@@ -15,17 +15,18 @@ export const notifyMaker = (text, type) => {
     };
 };
 
-export const getMousePosition = (event) => {
-    const mousePosition = { x: event.clientX, y: event.clientY };
-    return mousePosition;
+export const getElementPosition = (element, parent) => {
+    let bounds = element.getBoundingClientRect();
+    let parentBounds = parent.getBoundingClientRect();
+    let x = bounds.left - parentBounds.left;
+    let y = bounds.top - parentBounds.top;
+    return { x, y };
 };
 
-
 export function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
 }
-
