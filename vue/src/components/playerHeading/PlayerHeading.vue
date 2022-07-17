@@ -17,6 +17,7 @@ export default {
 };
 </script>
 <style module>
+
 .container {
   -moz-box-shadow: 0 0 3px #ccc;
   -webkit-box-shadow: 0 0 3px #ccc;

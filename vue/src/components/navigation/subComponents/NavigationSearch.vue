@@ -38,7 +38,6 @@ watch(phrase, (newVal, _) => {
         store.commit("clearSearchResults");
     }
 });
-
 </script>
 <style module>
 .searchGroup {
@@ -81,7 +80,7 @@ watch(phrase, (newVal, _) => {
     flex-direction: column;
     row-gap: 1rem;
     transition: all 0.3s ease-in;
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 0px;
     transition: all 0.3s ease-out;
 }
