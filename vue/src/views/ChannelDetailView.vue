@@ -6,6 +6,7 @@
         <PlayerHeading
             :channelImg="store.getters.getSingleChannel?.img"
             :channelName="store.getters.getSingleChannel?.title"
+            @toggleModal="toggleModal"
         />
         <Player :streamUrl="store.getters.getSingleChannel?.streamLink" />
     </div>
@@ -52,7 +53,11 @@ export default {
             { immediate: true }
         );
 
-        return { store, route };
+        const toggleModal = () => {
+            console.log("open a modal");
+        };
+
+        return { store, route, toggleModal };
     },
 };
 </script>

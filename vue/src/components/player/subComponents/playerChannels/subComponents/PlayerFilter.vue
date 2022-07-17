@@ -101,7 +101,6 @@ watchEffect(
             }
         }
     },
-    { immediate: true, deep: true }
 );
 </script>
 

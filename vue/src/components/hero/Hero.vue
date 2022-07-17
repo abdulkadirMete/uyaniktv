@@ -3,7 +3,7 @@
         :class="$style.hero"
         @mouseenter="store.commit('toggleDropdown', false)"
     >
-        <section class="customSection" :class="heroSection">
+        <section class="customSection">
             <div :class="$style.container">
                 <div :class="$style.left">
                     <h1 :class="$style.heroHeading">

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <CustomListHeading heading="Yayın akışı" red="true" />
+    <CustomListHeading heading="Yayın akışı" :red="true" />
     <DateHeader date="6 Temmuz Çarşamba" />
     <DateItem hour="15:00" program="Ana haber" />
     <DateItem hour="15:00" program="Ana haber" />
