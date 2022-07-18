@@ -59,7 +59,7 @@
                     :class="$style.progressStick"
                     type="range"
                     min="0"
-                    max="1800"
+                    :max="recordedVideoDuration"
                     v-model="currentVideoTime"
                 />
                 <!-- controllers container -->
@@ -69,7 +69,7 @@
                         <span
                             class="material-symbols-outlined"
                             :class="$style.controllersIcon"
-                            @click="rewind(300)"
+                            @click="rewind(longRewindForwardNumber)"
                             @mouseover="showTips($event, '5dk geri')"
                             @mouseleave="hideTips"
                         >
@@ -79,7 +79,7 @@
                         <font-awesome-icon
                             icon="fa-solid fa-backward-step"
                             :class="$style.controllersIcon"
-                            @click="rewind(60)"
+                            @click="rewind(shortRewindForwardNumber)"
                             @mouseover="showTips($event, '1dk geri')"
                             @mouseleave="hideTips"
                         />
@@ -109,7 +109,7 @@
                         <font-awesome-icon
                             icon="fa-solid fa-forward-step"
                             :class="$style.controllersIcon"
-                            @click="forward(60)"
+                            @click="forward(shortRewindForwardNumber)"
                             @mouseover="showTips($event, '1dk ileri')"
                             @mouseleave="hideTips"
                         />
@@ -118,7 +118,7 @@
                         <span
                             class="material-symbols-outlined"
                             :class="$style.controllersIcon"
-                            @click="forward(300)"
+                            @click="forward(longRewindForwardNumber)"
                             @mouseover="showTips($event, '5dk ileri')"
                             @mouseleave="hideTips"
                         >
@@ -204,12 +204,20 @@
 </template>
 <script>
 import Hls from "hls.js";
-import { computed, ref, watch } from "vue";
+import { fromEvent, switchMap, tap, timer } from "rxjs";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+    defaultVolumeLevel,
+    hideCursorTime,
+    longRewindForwardNumber,
+    maxVolumeLevel,
+    recordedVideoDuration,
+    shortRewindForwardNumber,
+} from "../../data/options";
 import { getElementPosition, secondToStringDate } from "../../helpers/helpers";
+import store from "../../store";
 import PlayerChannels from "./subComponents/playerChannels/PlayerChannels.vue";
 import StreamDates from "./subComponents/playerFeatures/StreamDates.vue";
-import { fromEvent, tap, switchMap, timer } from "rxjs";
-import { onMounted, onBeforeUnmount } from "vue";
 
 export default {
     components: { PlayerChannels, StreamDates },
@@ -223,8 +231,8 @@ export default {
         const videoRef = ref(null);
         const controllersRef = ref(null);
         const mainContainerRef = ref(null);
-        let volume = ref(30);
-        let currentVideoTime = ref(1800);
+        let volume = ref(defaultVolumeLevel);
+        let currentVideoTime = ref(recordedVideoDuration);
         let isFullScreen = ref(false);
         let streamInfo = ref("");
         let hideControllers = ref(false);
@@ -234,14 +242,12 @@ export default {
 
         // play
         const play = () => {
-            videoRef.value.play();
-            isPlay.value = true;
             let hls = new Hls();
-            let video = videoRef.value;
             hls.loadSource(props.streamUrl);
-            hls.attachMedia(video);
+            hls.attachMedia(videoRef.value);
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                video.play();
+                videoRef.value.play();
+                isPlay.value = true;
             });
         };
 
@@ -274,7 +280,7 @@ export default {
 
         // open volume
         const openVolume = () => {
-            volume.value = 50;
+            volume.value = defaultVolumeLevel;
             isMute.value = false;
         };
 
@@ -286,17 +292,19 @@ export default {
         // change volume
         const changeVolume = (e) => {
             volume.value = e;
-            videoRef.value.volume = volume.value / 100 || 0;
+            videoRef.value.volume = volume.value / maxVolumeLevel || 0;
         };
 
         const isMute = computed(() => volume.value != 0);
 
         // change timer
         watch(currentVideoTime, (newTime, oldTime) => {
-            const timeDif = newTime - (oldTime || 1800);
+            const timeDif = newTime - (oldTime || recordedVideoDuration);
             const absoluteDif = Math.abs(timeDif);
             timeDif < 0 ? rewind(absoluteDif) : forward(absoluteDif);
-            streamInfo.value = secondToStringDate(1800 - newTime);
+            streamInfo.value = secondToStringDate(
+                recordedVideoDuration - newTime
+            );
         });
 
         // specific key listiners
@@ -308,7 +316,6 @@ export default {
             }
             // esc
             if (key === "Escape") {
-                console.log("escape");
             }
         };
         // add listiner
@@ -324,7 +331,7 @@ export default {
                         controllersRef.value?.classList.remove("hide");
                     }),
                     switchMap((event) =>
-                        timer(3000).pipe(
+                        timer(hideCursorTime).pipe(
                             tap(() => {
                                 videoRef.value.classList.add("hideCursor");
                                 controllersRef?.value.classList.add("hide");
@@ -361,6 +368,14 @@ export default {
             tipRef.value.style.display = "none";
         };
 
+        // channel changes listiner
+        watch(
+            () => props.streamUrl,
+            (streamUrl) => {
+                currentVideoTime.value = recordedVideoDuration;
+                play();
+            }
+        );
         return {
             play,
             pause,
@@ -385,6 +400,14 @@ export default {
             hideTips,
             openVolume,
             closeVolume,
+            store,
+            // player options
+            recordedVideoDuration,
+            hideCursorTime,
+            maxVolumeLevel,
+            defaultVolumeLevel,
+            longRewindForwardNumber,
+            shortRewindForwardNumber,
         };
     },
 };

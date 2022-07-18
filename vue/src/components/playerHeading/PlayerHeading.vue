@@ -4,23 +4,26 @@
             <img :src="channelImg" :class="$style.img" alt="channel" />
             <span :class="$style.name">{{ channelName }}</span>
         </div>
-        <button
-            v-if="!hideButton"
-            class="btnSecondary"
-            @click="$emit('toggleModal')"
-        >
+        <button v-if="!hideButton" class="btnSecondary" @click="openModal">
             Sorun Bildir
         </button>
     </div>
 </template>
 <script>
+import store from '../../store';
 export default {
     props: {
         channelImg: String,
         channelName: String,
         hideButton: Boolean,
     },
-    setup(props, { emit }) {},
+    setup(props) {
+        const openModal = () => {
+            store.commit("toggleReportModal", true);
+        };
+
+        return { openModal };
+    },
 };
 </script>
 <style module>

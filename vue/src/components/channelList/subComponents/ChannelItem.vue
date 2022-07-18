@@ -46,7 +46,6 @@ export default {
 
 .channelImg {
   width: 100px;
-  height: 80px;
   margin: 1rem 0;
   object-fit: cover;
 }

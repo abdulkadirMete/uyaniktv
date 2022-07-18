@@ -8,6 +8,7 @@
             :channelName="store.getters.getSingleChannel?.title"
             @toggleModal="toggleModal"
         />
+        <ReportProblem v-if="store.getters.getShowReportModal" />
         <Player :streamUrl="store.getters.getSingleChannel?.streamLink" />
     </div>
 </template>
@@ -18,12 +19,14 @@ import { useStore } from "vuex";
 import Player from "../components/player/Player.vue";
 import PlayerHeading from "../components/playerHeading/PlayerHeading.vue";
 import { watch } from "vue";
+import ReportProblem from "../components/playerHeading/subComponents/ReportProblem.vue";
 
 export default {
     components: {
-        Player,
-        PlayerHeading,
-    },
+    Player,
+    PlayerHeading,
+    ReportProblem
+},
     setup(props) {
         const route = useRoute();
         const store = useStore();
@@ -53,9 +56,7 @@ export default {
             { immediate: true }
         );
 
-        const toggleModal = () => {
-            console.log("open a modal");
-        };
+        const toggleModal = () => {};
 
         return { store, route, toggleModal };
     },

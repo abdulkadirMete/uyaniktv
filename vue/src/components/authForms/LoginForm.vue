@@ -245,7 +245,6 @@ export default {
 .input {
   width: 100%;
   display: block;
-  border: none;
   padding: 0.75rem 0;
   font-size: var(--font-size-l);
   border-bottom: solid 1px var(--color-aside-bg);

@@ -1,42 +1,49 @@
 const utilStore = {
-  state: () => ({
-    return: {
-      showAside: false,
-      showDropdown: false,
-      showLoading: false,
+    state: () => ({
+        return: {
+            showAside: false,
+            showDropdown: false,
+            showLoading: false,
+            showReportModal: false,
+        },
+    }),
+    mutations: {
+        toggleAside: (state, payload) => {
+            state.showAside = payload;
+            !payload && document.body.setAttribute("style", "overflow:auto");
+        },
+        toggleDropdown: (state, payload) => {
+            state.showDropdown = payload;
+        },
+        toggleLoading: (state, payload) => {
+            state.showLoading = payload;
+        },
+        toggleReportModal: (state, payload) => {
+            state.showReportModal = payload;
+        },
     },
-  }),
-  mutations: {
-    toggleAside: (state, payload) => {
-      state.showAside = payload;
-      !payload && document.body.setAttribute("style", "overflow:auto");
+    actions: {
+        toggleBodyScroll: (payload) => {
+            return document.body.setAttribute(
+                "style",
+                `overflow:${payload ? "hidden" : "auto"}`
+            );
+        },
     },
-    toggleDropdown: (state, payload) => {
-      state.showDropdown = payload;
+    getters: {
+        getShowAside: (state) => {
+            return state.showAside;
+        },
+        getShowDropdown: (state) => {
+            return state.showDropdown;
+        },
+        getShowLoading: (state) => {
+            return state.showLoading;
+        },
+        getShowReportModal: (state) => {
+            return state.showReportModal;
+        },
     },
-    toggleLoading: (state, payload) => {
-      state.showLoading = payload;
-    },
-  },
-  actions: {
-    toggleBodyScroll: (payload) => {
-      return document.body.setAttribute(
-        "style",
-        `overflow:${payload ? "hidden" : "auto"}`
-      );
-    },
-  },
-  getters: {
-    getShowAside: (state) => {
-      return state.showAside;
-    },
-    getShowDropdown: (state) => {
-      return state.showDropdown;
-    },
-    getShowLoading: (state) => {
-      return state.showLoading;
-    },
-  },
 };
 
 export default utilStore;

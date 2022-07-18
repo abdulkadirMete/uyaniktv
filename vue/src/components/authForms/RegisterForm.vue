@@ -175,7 +175,6 @@ export default {
     // save db
     const saveUser = () => {
       loading.value = true;
-      console.log({ ...user.value });
       store
         .dispatch("register", { ...user.value })
         .then(() => {
@@ -230,7 +229,6 @@ export default {
 }
 
 .registerBtn {
-  border: none;
   margin-top: 1rem;
   padding: 0.5rem 0;
   background-color: var(--color-brand-light);

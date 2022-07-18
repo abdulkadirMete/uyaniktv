@@ -22,7 +22,6 @@
     "v-pagination-3": "^0.1.7",
     "vue": "^3.2.37",
     "vue-router": "^4.0.16",
-    "vue3-circle-progress": "^1.0.7",
     "vuex": "^4.0.2",
     "yup": "^0.32.11"
   },
