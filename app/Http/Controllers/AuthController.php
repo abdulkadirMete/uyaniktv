@@ -65,7 +65,7 @@ class AuthController extends Controller
             'token' => $token
         ]);
     }
-
+    // logout
     public function logout()
     {
         /** @var User $user */
@@ -92,6 +92,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // validate membership
     public function validateMembership()
     {
         $user = Auth::user();

@@ -32,8 +32,8 @@ const phrase = ref("");
 const showResults = ref(false);
 
 watch(phrase, (newVal, _) => {
-    if (newVal.length > 2) {
-        store.commit("searchChannel", newVal);
+    if (newVal.length > 1) {
+        store.dispatch("searchChannel", newVal);
     } else {
         store.commit("clearSearchResults");
     }

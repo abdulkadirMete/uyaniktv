@@ -19,3 +19,4 @@ Route::post('/kaydol', [AuthController::class, 'register']);
 Route::post('/giris', [AuthController::class, 'login']);
 Route::get('/kanallar', [ChannelController::class, 'getAllChannels']);
 Route::get('/canli-izle/{id}', [ChannelController::class, 'getSingleChannel']);
+Route::get('/stream-list/{listKey}', [ChannelController::class, 'getStreamList']);

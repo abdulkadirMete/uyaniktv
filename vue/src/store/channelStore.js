@@ -16,15 +16,11 @@ const channelStore = {
         setSingleChannel: (state, payload) => {
             state.singleChannel = payload;
         },
-
-        searchChannel: (state, payload) => {
-            const tmpArray = state.channels.filter((channel, _) =>
-                channel.title.toUpperCase().includes(payload.toUpperCase())
-            );
-            state.searchResults.push(...tmpArray);
-        },
         clearSearchResults: (state, payload) => {
             state.searchResults = [];
+        },
+        setSearchResults: (state, payload) => {
+            state.searchResults = payload;
         },
     },
     actions: {
@@ -39,12 +35,13 @@ const channelStore = {
                 return data[0];
             });
         },
-
-        // addUserChannelList: ({ commit }, id) => {
-        //     return axiosClient.post(`/listeme-ekle/${id}`).then(({ data }) => {
-        //         return data.success;
-        //     });
-        // },
+        // searchChannel
+        searchChannel: ({ state, commit }, payload) => {
+            const tmpArray = state.channels.filter((channel, _) =>
+                channel.title.toUpperCase().includes(payload.toUpperCase())
+            );
+            commit("setSearchResults", tmpArray);
+        },
     },
     getters: {
         getChannels: (state) => {

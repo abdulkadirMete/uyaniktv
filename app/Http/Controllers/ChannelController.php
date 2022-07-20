@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Error;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,17 +24,31 @@ class ChannelController extends Controller
     }
 
     // user channel list 
-    public function getUserChannelList(Request $request)
+    public function getUserChannelList()
     {
         $user = Auth::user();
         $favoriteChannels = DB::select('select * from channels where id in ?', $user['channelList']);
         return response($favoriteChannels);
     }
 
-    public function addUserChannelList(Request $request)
+    public function addUserChannelList()
     {
         return response([
             'success' => true
         ]);
+    }
+
+    public function getStreamList(Request $request)
+    {
+
+        $guideArray = prepareChannelGuide();
+
+        foreach ($guideArray['Channels']['Channel'] as $channel) {
+            if ($channel['Name'] === $request->listKey) {
+                return response($channel);
+            }
+        }
+
+        return response(['success' => false]);
     }
 }
