@@ -22,7 +22,11 @@ export default {
                 if (props.staySamePage) {
                     store.commit("toggleReportModal", false);
                 } else {
-                    router.push("/");
+                    if (window.history.length) {
+                        router.push("/");
+                    } else {
+                        router.go(-1);
+                    }
                 }
             }
         };

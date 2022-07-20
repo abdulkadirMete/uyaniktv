@@ -32,8 +32,6 @@ class ChannelController extends Controller
 
     public function addUserChannelList(Request $request)
     {
-        
-
         return response([
             'success' => true
         ]);

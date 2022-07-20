@@ -10,7 +10,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::post('/cikis', [AuthController::class, 'logout']);
-    Route::post('/listeme-ekle/{id}', [ChannelController::class, 'addUserChannelList']);
+    Route::post('/buy', [AuthController::class, 'buyMembership']);
+    Route::get('/membership', [AuthController::class, 'validateMembership']);
+    // Route::post('/listeme-ekle/{id}', [ChannelController::class, 'addUserChannelList']);
 });
 
 Route::post('/kaydol', [AuthController::class, 'register']);

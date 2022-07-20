@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import ShoppingView from "../views/ShoppingView.vue";
 import LoginForm from "../components/authForms/LoginForm.vue";
 import RegisterForm from "../components/authForms/RegisterForm.vue";
+import ProfileForm from "../components/authForms/ProfileForm.vue";
 import store from "../store";
 
 const router = createRouter({
@@ -26,6 +27,13 @@ const router = createRouter({
                     component: LoginForm,
                     meta: { notNeedIfUserExist: true },
                 },
+
+                {
+                    name: "Profile",
+                    path: "profil",
+                    component: ProfileForm,
+                    meta: { requireLogin: true },
+                },
             ],
         },
         {
@@ -44,10 +52,17 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !store.getters.getUser) {
-        next({ name: "Login" });
-    } else if (to.meta.notNeedIfUserExist && store.getters.getSession) {
+    // login register lock
+    if (to.meta.notNeedIfUserExist && store.getters.getSession) {
         next({ name: "Home" });
+    }
+    // try
+    if (to.meta.requireLogin && store.getters.getUser) {
+        next();
+    }
+    // protect watch page
+    if (to.meta.requiresAuth && !store.getters.getMembership) {
+        next({ name: "Membership" });
     } else {
         next();
     }

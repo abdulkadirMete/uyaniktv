@@ -27,25 +27,29 @@
         >
             <ul :class="$style.menuContainer">
                 <!-- router links -->
-                <li :class="$style.menuGroup" v-for="item in dropdownItems">
+                <router-link
+                    :to="item.path"
+                    :class="$style.menuGroup"
+                    v-for="item in dropdownItems"
+                >
                     <font-awesome-icon
                         :icon="item.icon"
                         :class="$style.menuItemIcon"
                     />
-                    <router-link :class="$style.menuLink" :to="item.path">{{
-                        item.title
-                    }}</router-link>
-                </li>
+                    <span :class="$style.menuLink">{{ item.title }}</span>
+                </router-link>
 
                 <!-- logout -->
-                <li :class="$style.menuGroup" v-if="store.getters.getUser">
+                <li
+                    :class="$style.menuGroup"
+                    v-if="store.getters.getUser"
+                    @click="logout"
+                >
                     <font-awesome-icon
                         icon="fa-solid fa-right-from-bracket"
                         :class="$style.menuItemIcon"
                     />
-                    <span :class="$style.menuLink" @click="logout"
-                        >Çıkış yap</span
-                    >
+                    <span :class="$style.menuLink">Çıkış yap</span>
                 </li>
             </ul>
         </div>

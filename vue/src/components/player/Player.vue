@@ -27,7 +27,9 @@
                         >
                             hd
                         </span>
-                        <span :class="$style.indicatorText">Yüksek Kalite</span>
+                        <span :class="$style.indicatorText" @click="playAsHD"
+                            >Yüksek Kalite</span
+                        >
                     </li>
                     <li :class="$style.indicatorItem">
                         <span
@@ -36,14 +38,20 @@
                         >
                             cast
                         </span>
-                        <span :class="$style.indicatorText">Canlı Yayın</span>
+                        <span :class="$style.indicatorText" @click="goLive"
+                            >Canlı Yayın</span
+                        >
                     </li>
                     <li :class="$style.indicatorItem">
                         <font-awesome-icon
                             icon="fa-solid fa-backward"
                             :class="$style.controllersIcon"
                         />
-                        <span :class="$style.indicatorText">24 Saat Geri</span>
+                        <span
+                            :class="$style.indicatorText"
+                            @click="goStartOfRecord"
+                            >24 Saat Geri</span
+                        >
                     </li>
                 </ul>
             </div>
@@ -214,7 +222,11 @@ import {
     recordedVideoDuration,
     shortRewindForwardNumber,
 } from "../../data/options";
-import { getElementPosition, secondToStringDate } from "../../helpers/helpers";
+import {
+    getElementPosition,
+    secondToStringDate,
+    setElementPosition,
+} from "../../helpers/helpers";
 import store from "../../store";
 import PlayerChannels from "./subComponents/playerChannels/PlayerChannels.vue";
 import StreamDates from "./subComponents/playerFeatures/StreamDates.vue";
@@ -239,10 +251,10 @@ export default {
         let showIndicator = ref(false);
         let tipText = ref("");
         let tipRef = ref(null);
+        let hls = new Hls();
 
         // play
         const play = () => {
-            let hls = new Hls();
             hls.loadSource(props.streamUrl);
             hls.attachMedia(videoRef.value);
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -335,6 +347,7 @@ export default {
                             tap(() => {
                                 videoRef.value.classList.add("hideCursor");
                                 controllersRef?.value.classList.add("hide");
+                                showIndicator.value = false;
                                 hideTips();
                             })
                         )
@@ -346,21 +359,20 @@ export default {
         onBeforeUnmount(() => {
             observable.unsubscribe();
             document.removeEventListener("keydown", keyListiner);
+            hls.destroy();
         });
 
         // show tips on hover
         const showTips = (event, text) => {
-            const position = getElementPosition(
+            const { x, y } = getElementPosition(
                 event.target,
                 mainContainerRef.value
             );
             tipText.value = text;
             // position
-            tipRef.value.style.position = "absolute";
-            tipRef.value.style.left = position.x + "px";
-            tipRef.value.style.top = 380 + "px";
+            tipRef.value = setElementPosition(tipRef.value, 380, null, null, x);
             tipRef.value.style.display = "block";
-            // sub half of icon width
+            // sub half of icon width for center
             tipRef.value.style.transform = "translateX(calc(-50% + 12px))";
         };
 
@@ -376,6 +388,19 @@ export default {
                 play();
             }
         );
+        //auth functions
+        const goLive = () => {
+            showIndicator.value = false;
+            currentVideoTime.value = recordedVideoDuration;
+        };
+
+        const playAsHD = () => {};
+
+        const goStartOfRecord = () => {
+            showIndicator.value = false;
+            currentVideoTime.value = 0;
+        };
+
         return {
             play,
             pause,
@@ -408,6 +433,10 @@ export default {
             defaultVolumeLevel,
             longRewindForwardNumber,
             shortRewindForwardNumber,
+            //premium functions
+            goLive,
+            playAsHD,
+            goStartOfRecord,
         };
     },
 };
@@ -596,7 +625,7 @@ export default {
     padding: 0.5rem;
     border-radius: var(--border-radius-sm);
     z-index: 2;
-    position: relative;
+    position: absolute;
     display: none;
 }
 

@@ -23,6 +23,7 @@
     --color-success-green: #57af57;
     --color-fail-red: #f10000;
     --color-video-player-transparent: rgba(0, 0, 0, 0.1);
+    --color-divider-hr: rgb(121, 113, 113);
 
     /* media queries */
     --breakpoint-xsm: 368px;
@@ -208,6 +209,14 @@ button {
 
 img {
     object-fit: cover;
+}
+
+hr {
+    height: 1px;
+    color: var(--color-divider-hr);
+    background: var(--color-divider-hr);
+    font-size: 0;
+    border: 0;
 }
 
 /* buttons */

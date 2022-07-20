@@ -1,10 +1,13 @@
 import axiosClient from "../axios";
+import moment from "moment";
+import { dateFormat } from "../data/options";
 
 const authStore = {
     state: () => ({
         return: {
-            user: {},
+            user: null,
             token: sessionStorage.getItem("TOKEN"),
+            isValidMembership: false,
         },
     }),
     actions: {
@@ -31,10 +34,27 @@ const authStore = {
                 return response;
             });
         },
-
+        // session
         setUserIfExist({ commit }) {
-            return axiosClient.get("/user").then((res) => {
-                commit("setUser", res.data);
+            return axiosClient.get("/user").then((response) => {
+                commit("setUser", response.data);
+                return response.data;
+            });
+        },
+        // buy user membership
+        buyMembership(_, membershipObject) {
+            return axiosClient
+                .post("/buy", membershipObject)
+                .then((response) => {
+                    return response;
+                });
+        },
+
+        // buy membership
+        checkMembership({ commit }) {
+            return axiosClient.get("/membership").then((response) => {
+                console.log(response.data.success);
+                commit("setMembership", response.data.success);
             });
         },
     },
@@ -49,17 +69,25 @@ const authStore = {
         logout: (state) => {
             state.token = null;
             state.user = null;
+            state.isValidMembership = false;
             sessionStorage.removeItem("TOKEN");
+        },
+        setMembership: (state, payload) => {
+            state.isValidMembership = payload;
         },
     },
     getters: {
         getUser: (state) => {
             return state.user;
         },
-        getSession: (state) => {
+        getSession: () => {
             return sessionStorage.getItem("TOKEN");
+        },
+        getMembership: (state) => {
+            return state.isValidMembership;
         },
     },
 };
+
 
 export default authStore;

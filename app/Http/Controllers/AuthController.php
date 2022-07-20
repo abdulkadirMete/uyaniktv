@@ -6,9 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-
-
-
+use DateTime;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -77,5 +76,34 @@ class AuthController extends Controller
         return response([
             'success' => true
         ]);
+    }
+
+    // check membership 
+    public function buyMembership(Request $request)
+    {
+        $user = Auth::user();
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update(['membership' =>  $request->getContent()]);
+
+
+        return response([
+            'success' => true
+        ]);
+    }
+
+    public function validateMembership()
+    {
+        $user = Auth::user();
+        $date_now = strtotime(date('Y-m-d'));
+
+        if ($user->membership) {
+            $expire_time = strtotime($user->membership);
+            if ($date_now < $expire_time) {
+                return response(['success' => true]);
+            }
+        }
+
+        return response(['success' => false]);
     }
 }

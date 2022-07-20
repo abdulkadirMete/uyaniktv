@@ -7,9 +7,9 @@ import Footer from "../components/footer/Footer.vue";
 </script>
 
 <template>
-  <Hero />
-  <Streams />
-  <RouterView :key="$route.fullPath" />
-  <ChannelList />
-  <Footer />
+    <Hero />
+    <Streams />
+    <RouterView :key="$route.fullPath" />
+    <ChannelList />
+    <Footer />
 </template>

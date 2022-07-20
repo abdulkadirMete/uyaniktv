@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const secondToStringDate = (seconds) => {
     if (seconds == 0) {
         return "Canlı";
@@ -23,10 +25,26 @@ export const getElementPosition = (element, parent) => {
     return { x, y };
 };
 
+export const setElementPosition = (element, top, right, bottom, left) => {
+    if (top) element.style.top = top + "px";
+    if (right) element.style.right = right + "px";
+    if (bottom) element.style.bottom = bottom + "px";
+    if (left) element.style.left = left + "px";
+
+    return element;
+};
+
 export function sleep(milliseconds) {
     const date = Date.now();
     let currentDate = null;
     do {
         currentDate = Date.now();
     } while (currentDate - date < milliseconds);
+}
+
+// how much day left
+export function daysRemaining(date) {
+    var date = moment(date);
+    var todaysdate = moment();
+    return date.diff(todaysdate, "days");
 }

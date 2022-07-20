@@ -168,6 +168,7 @@ export default {
 .textAreaInput {
     cursor: text;
     height: 200px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .input:focus {

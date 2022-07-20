@@ -9,19 +9,19 @@ axiosClient.interceptors.request.use((config) => {
     return config;
 });
 
-axiosClient.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    (error) => {
-        if (error.response.status === 401) {
-            sessionStorage.removeItem("TOKEN");
-            router.push({ name: "Login" });
-        } else if (error.response.status === 404) {
-            router.push({ name: "NotFound" });
-        }
-        throw error;
-    }
-);
+// axiosClient.interceptors.response.use(
+//     (response) => {
+//         return response;
+//     },
+//     (error) => {
+//         if (error.response.status === 401) {
+//             sessionStorage.removeItem("TOKEN");
+//             router.push({ name: "Login" });
+//         } else if (error.response.status === 404) {
+//             //there isn't a user
+//         }
+//         throw error;
+//     }
+// );
 
 export default axiosClient;

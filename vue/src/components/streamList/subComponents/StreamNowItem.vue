@@ -120,11 +120,6 @@ export default {
 /* divider */
 
 .divider {
-    height: 1px;
-    color: rgb(121, 113, 113);
-    background: rgb(121, 113, 113);
-    font-size: 0;
-    border: 0;
     margin: 0 -0.75rem;
     margin-top: 0.75rem;
 }
