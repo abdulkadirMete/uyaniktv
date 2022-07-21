@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->text('title');
             $table->text('img');
+            $table->text('guideKey');
             $table->text('hdr');
             $table->text('dvr');
             $table->text('streamLink');
             $table->timestamps();
-
         });
     }
 

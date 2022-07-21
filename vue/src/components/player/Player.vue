@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.container">
-        <StreamDates v-if="!hideControllers" />
+        <StreamDates/>
         <div :class="$style.playerContainer" ref="mainContainerRef">
             <!-- show tips  -->
             <div
@@ -207,7 +207,7 @@
                 <!-- end of controllers -->
             </div>
         </div>
-        <PlayerChannels v-if="!hideControllers" />
+        <PlayerChannels/>
     </div>
 </template>
 <script>
@@ -234,7 +234,7 @@ import StreamDates from "./subComponents/playerFeatures/StreamDates.vue";
 export default {
     components: { PlayerChannels, StreamDates },
     props: {
-        streamUrl: String,
+        streamLink: String,
     },
 
     setup(props) {
@@ -255,7 +255,7 @@ export default {
 
         // play
         const play = () => {
-            hls.loadSource(props.streamUrl);
+            hls.loadSource(props.streamLink);
             hls.attachMedia(videoRef.value);
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
                 videoRef.value.play();
@@ -370,7 +370,7 @@ export default {
             );
             tipText.value = text;
             // position
-            tipRef.value = setElementPosition(tipRef.value, 380, null, null, x);
+            tipRef.value = setElementPosition(tipRef.value, null, null, 80, x);
             tipRef.value.style.display = "block";
             // sub half of icon width for center
             tipRef.value.style.transform = "translateX(calc(-50% + 12px))";
@@ -382,8 +382,8 @@ export default {
 
         // channel changes listiner
         watch(
-            () => props.streamUrl,
-            (streamUrl) => {
+            () => props.streamLink,
+            (streamLink) => {
                 currentVideoTime.value = recordedVideoDuration;
                 play();
             }

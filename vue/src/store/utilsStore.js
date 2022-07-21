@@ -5,6 +5,7 @@ const utilStore = {
             showDropdown: false,
             showLoading: false,
             showReportModal: false,
+            showGuideLoading: true,
         },
     }),
     mutations: {
@@ -20,6 +21,9 @@ const utilStore = {
         },
         toggleReportModal: (state, payload) => {
             state.showReportModal = payload;
+        },
+        toggleGuideLoading: (state, payload) => {
+            state.showGuideLoading = payload;
         },
     },
     actions: {
@@ -42,6 +46,10 @@ const utilStore = {
         },
         getShowReportModal: (state) => {
             return state.showReportModal;
+        },
+
+        getGuideLoading: (state) => {
+            return state.showGuideLoading;
         },
     },
 };

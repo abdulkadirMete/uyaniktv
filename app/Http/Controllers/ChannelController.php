@@ -18,7 +18,6 @@ class ChannelController extends Controller
 
     public function getSingleChannel(Request $request)
     {
-
         $channel = DB::select('select * from channels where id = ?', [$request->id]);
         return response($channel);
     }

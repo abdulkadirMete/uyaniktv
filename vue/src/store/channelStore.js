@@ -6,7 +6,8 @@ const channelStore = {
         return: {
             channels: [],
             searchResults: [],
-            singleChannel: {},
+            singleChannel: null,
+            singleChannelGuide: null,
         },
     }),
     mutations: {
@@ -22,6 +23,9 @@ const channelStore = {
         setSearchResults: (state, payload) => {
             state.searchResults = payload;
         },
+        setSingleChannelGuide: (state, payload) => {
+            state.singleChannelGuide = payload;
+        },
     },
     actions: {
         fetchChannels: ({ commit }) => {
@@ -35,12 +39,24 @@ const channelStore = {
                 return data[0];
             });
         },
-        // searchChannel
         searchChannel: ({ state, commit }, payload) => {
             const tmpArray = state.channels.filter((channel, _) =>
                 channel.title.toUpperCase().includes(payload.toUpperCase())
             );
             commit("setSearchResults", tmpArray);
+        },
+
+        fetchGuide: ({ commit, state }, guideKey) => {
+            console.log(state.singleChannel.guideKey);
+            return axiosClient
+                .get(`/stream-list/${state.singleChannel.guideKey}`)
+                .then(({ data }) => {
+                    commit("setSingleChannelGuide", data.Programs.Program);
+                    return data.Programs.Program;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
     },
     getters: {
@@ -59,6 +75,9 @@ const channelStore = {
         },
         getSearchResults: (state) => {
             return state.searchResults;
+        },
+        getGuide: (state) => {
+            return state.singleChannelGuide;
         },
     },
 };

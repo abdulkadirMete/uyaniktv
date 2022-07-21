@@ -4,29 +4,33 @@
         @mouseenter="store.commit('toggleDropdown', false)"
     >
         <PlayerHeading
-            :channelImg="store.getters.getSingleChannel?.img"
-            :channelName="store.getters.getSingleChannel?.title"
+            :channelImg="getSingleChannel?.img"
+            :channelName="getSingleChannel?.title"
             @toggleModal="toggleModal"
         />
-        <ReportProblem v-if="store.getters.getShowReportModal" />
-        <Player :streamUrl="store.getters.getSingleChannel?.streamLink" />
+        <ReportProblem v-if="getShowReportModal" />
+        <Player :streamLink="getSingleChannel?.streamLink" />
     </div>
 </template>
 <script>
-import { notify } from "@kyvg/vue3-notification";
+import { watch } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+import { mapGetters, useStore } from "vuex";
 import Player from "../components/player/Player.vue";
 import PlayerHeading from "../components/playerHeading/PlayerHeading.vue";
-import { watch } from "vue";
 import ReportProblem from "../components/playerHeading/subComponents/ReportProblem.vue";
+import store from "../store";
 
 export default {
     components: {
-    Player,
-    PlayerHeading,
-    ReportProblem
-},
+        Player,
+        PlayerHeading,
+        ReportProblem,
+    },
+    computed: {
+        ...mapGetters(["getSingleChannel", "getShowReportModal"]),
+    },
+
     setup(props) {
         const route = useRoute();
         const store = useStore();
@@ -39,19 +43,21 @@ export default {
         watch(
             () => route.params.id,
             (newId) => {
+                // route param undefined then return
+                if (!newId) return;
                 loading(true);
+                // get channel
                 store
                     .dispatch("fetchSingleChannel", route.params.id)
-                    .then(() => loading(false))
-                    .catch((error) => {
+                    .then(() => {
                         loading(false);
-                        notify(
-                            notifyMaker(
-                                "Bir hata oluştu daha sonra tekrar deneyiniz",
-                                "error"
-                            )
-                        );
-                    });
+                        store.commit("toggleGuideLoading", true);
+
+                        store
+                            .dispatch("fetchGuide").then(() =>  store.commit("toggleGuideLoading", false))
+                            .catch((err) => console.log(err));
+                    })
+                    .catch((err) => console.log(err));
             },
             { immediate: true }
         );

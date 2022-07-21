@@ -119,7 +119,6 @@ export default {
         const serverOptimization = ref(false);
         const isServerHelp = ref(false);
 
-        console.log(store.getters.getUser.membership);
 
         const showHelp = (switchParameter) => {
             isServerHelp.value = switchParameter;

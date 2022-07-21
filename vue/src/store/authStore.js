@@ -35,9 +35,9 @@ const authStore = {
         },
         // session
         setUserIfExist({ commit }) {
-            return axiosClient.get("/user").then((response) => {
-                commit("setUser", response.data);
-                return response.data;
+            return axiosClient.get("/user").then(({data}) => {
+                commit("setUser", data);
+                return data;
             });
         },
         // buy user membership
@@ -51,9 +51,8 @@ const authStore = {
 
         // buy membership
         checkMembership({ commit }) {
-            return axiosClient.get("/membership").then((response) => {
-                console.log(response.data.success);
-                commit("setMembership", response.data.success);
+            return axiosClient.get("/membership").then(({data}) => {
+                commit("setMembership", data.success);
             });
         },
     },
