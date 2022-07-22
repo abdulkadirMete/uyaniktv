@@ -80,13 +80,13 @@
     </div>
 </template>
 <script setup>
-import store from '../../store';
-
+import store from "../../store";
 </script>
 
 <style module>
 .hero {
     background-color: #f8f5f5;
+    background-color: black;
 }
 
 .container {
