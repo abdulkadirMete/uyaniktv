@@ -17,9 +17,9 @@
             <div class="sub-menu" v-if="isOpen && show">
                 <div v-for="(item, i) in guideObject.programsArray" :key="i">
                     <date-item
-                        :hour="item.hour"
+                        :unixtime="item.unixtime"
                         :program="item.program"
-                        :isActive="isCurrentHour(item.hour)"
+                        :isActive="false"
                     />
                 </div>
             </div>
@@ -39,6 +39,7 @@ export default {
     },
     setup(props, { emit }) {
         const show = ref(false);
+        const timeDif = ref();
 
         const handleSingularOpen = () => {
             emit("toggleOpen");
@@ -48,16 +49,13 @@ export default {
             return moment().day() === moment(date, "YYYY-MM-DD").day();
         };
 
-        const isCurrentHour = (itemHour) => {
-            return false;
-        };
+
 
         return {
             readableDateFormatter,
             show,
             handleSingularOpen,
             isCurrentDate,
-            isCurrentHour,
         };
     },
     components: { DateItem },

@@ -55,6 +55,10 @@ export const readableDateFormatter = (date) => {
     return moment(date, "YYYY-MM-DD").locale("tr").format("Do MMMM dddd YYYY");
 };
 
+export const unixToHour = (unixtime) => {
+    return moment.unix(unixtime).locale("tr").format("HH:mm"); //date use
+};
+
 // process guide data
 export const processData = (programs) => {
     try {
@@ -63,10 +67,11 @@ export const processData = (programs) => {
 
         for (let i = 0; i < programs.length; i++) {
             guideItem.day = programs[i].Time.split(" ")[0];
-            guideItem.unix = programs[i].unixtime;
+
             guideItem.programsArray.push({
                 hour: programs[i].Time.split(" ")[1],
                 program: programs[i].ProgramName,
+                unixtime: programs[i].unixtime,
             });
 
             if (i + 1 === programs.length) {
@@ -75,7 +80,7 @@ export const processData = (programs) => {
             }
             if (guideItem.day !== programs[i + 1].Time.split(" ")[0]) {
                 processedData.push(guideItem);
-                guideItem = { day: "", unix: "", programsArray: [] };
+                guideItem = { day: "", programsArray: [] };
             }
         }
 
@@ -84,4 +89,3 @@ export const processData = (programs) => {
         console.log(error);
     }
 };
-

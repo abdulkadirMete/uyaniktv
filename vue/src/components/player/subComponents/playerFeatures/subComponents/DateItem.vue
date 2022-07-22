@@ -1,6 +1,6 @@
 <template>
     <div :class="[$style.container, { [$style.active]: isActive }]">
-        <span :class="$style.hour">{{ hour.slice(0, -3) }}</span>
+        <span :class="$style.hour">{{ unixToHour(unixtime) }}</span>
         <span :class="$style.program">{{ program }}</span>
         <span
             class="material-symbols-outlined"
@@ -12,11 +12,16 @@
     </div>
 </template>
 <script>
+import { unixToHour } from "../../../../../helpers/helpers";
 export default {
     props: {
-        hour: String,
+        unixtime: String,
         program: String,
         isActive: Boolean,
+    },
+
+    setup() {
+        return { unixToHour };
     },
 };
 </script>
