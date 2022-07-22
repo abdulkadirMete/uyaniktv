@@ -86,7 +86,6 @@ import store from "../../store";
 <style module>
 .hero {
     background-color: #f8f5f5;
-    background-color: black;
 }
 
 .container {
