@@ -12,7 +12,7 @@ import { ref } from "vue";
 import { dateFormat } from "../../data/options";
 import store from "../../store";
 import { notify } from "@kyvg/vue3-notification";
-import { notifyMaker } from "../../helpers/helpers";
+import { notifyMaker } from "../../helpers/utilHelpers";
 import { defineAsyncComponent } from "vue";
 import router from "../../router";
 

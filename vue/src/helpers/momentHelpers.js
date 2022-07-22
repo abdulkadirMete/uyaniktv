@@ -1,56 +1,14 @@
 import moment from "moment";
 import "moment/dist/locale/tr";
 
-export const secondToStringDate = (seconds) => {
-    if (seconds == 0) {
-        return "Canlı";
-    } else {
-        return new Date(seconds * 1000).toISOString().slice(11, 19);
-    }
-};
-
-export const notifyMaker = (text, type) => {
-    const title = { success: "Mesaj", error: "Hata", warning: "Uyarı" };
-    return {
-        title: title[type],
-        text: text,
-        type: type,
-    };
-};
-
-export const getElementPosition = (element, parent) => {
-    let bounds = element.getBoundingClientRect();
-    let parentBounds = parent.getBoundingClientRect();
-    let x = bounds.left - parentBounds.left;
-    let y = bounds.top - parentBounds.top;
-    return { x, y };
-};
-
-export const setElementPosition = (element, top, right, bottom, left) => {
-    if (top) element.style.top = top + "px";
-    if (right) element.style.right = right + "px";
-    if (bottom) element.style.bottom = bottom + "px";
-    if (left) element.style.left = left + "px";
-
-    return element;
-};
-// wait
-export function sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-        currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-}
-
-//moment functions
-
+// remaining days
 export function daysRemaining(date) {
     var date = moment(date);
     var todaysdate = moment();
     return date.diff(todaysdate, "days");
 }
 
+// readable date format
 export const readableDateFormatter = (date) => {
     return moment(date, "YYYY-MM-DD").locale("tr").format("Do MMMM dddd YYYY");
 };
@@ -59,7 +17,7 @@ export const unixToHour = (unixtime) => {
     return moment.unix(unixtime).locale("tr").format("HH:mm"); //date use
 };
 
-// process guide data
+// process data
 export const processData = (programs) => {
     try {
         let guideItem = { day: "", unix: "", programsArray: [] };
@@ -88,4 +46,35 @@ export const processData = (programs) => {
     } catch (error) {
         console.log(error);
     }
+};
+
+// get current day
+export const getCurrentDayGuide = (guides) => {
+    const currentDay = moment().format("D");
+    let currentGuide;
+    guides.forEach((guide) => {
+        const guideDay = moment(guide.day, "YYYY-MM-DD").format("D");
+        if (guideDay === currentDay) {
+            currentGuide = guide;
+        }
+    });
+
+    return currentGuide;
+};
+
+// get currentProgram
+export const getCurrentProgram = (guide) => {
+    let minDif;
+    let currentProgram;
+    guide.programsArray.forEach((programItem) => {
+        const currentUnix = moment();
+        const programUnix = moment.unix(programItem.unixtime);
+        const diff = moment.duration(currentUnix.diff(programUnix));
+        if (!minDif || (diff > 0 && diff < minDif)) {
+            minDif = diff;
+            currentProgram = programItem;
+        }
+    });
+
+    return currentProgram;
 };

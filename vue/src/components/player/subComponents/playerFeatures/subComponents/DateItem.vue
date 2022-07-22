@@ -1,5 +1,8 @@
 <template>
-    <div :class="[$style.container, { [$style.active]: isActive }]">
+    <div
+        ref="programRef"
+        :class="[$style.container, { [$style.active]: isActive }]"
+    >
         <span :class="$style.hour">{{ unixToHour(unixtime) }}</span>
         <span :class="$style.program">{{ program }}</span>
         <span
@@ -12,7 +15,8 @@
     </div>
 </template>
 <script>
-import { unixToHour } from "../../../../../helpers/helpers";
+import { unixToHour } from "../../../../../helpers/momentHelpers";
+import { onMounted, ref } from "vue";
 export default {
     props: {
         unixtime: String,
@@ -20,8 +24,14 @@ export default {
         isActive: Boolean,
     },
 
-    setup() {
-        return { unixToHour };
+    setup({ isActive }) {
+        const programRef = ref(null);
+
+        onMounted(() => {
+            isActive && programRef.value.scrollIntoView({ behavior: "smooth" });
+        });
+
+        return { unixToHour, programRef };
     },
 };
 </script>

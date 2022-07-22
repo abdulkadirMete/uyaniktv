@@ -125,7 +125,7 @@ import { registerValidation } from "../../data/validitionVars";
 import CustomError from "./subComponents/CustomError.vue";
 import { ref } from "vue";
 import { notify } from "@kyvg/vue3-notification";
-import { notifyMaker } from "../../helpers/helpers";
+import { notifyMaker } from "../../helpers/utilHelpers";
 
 export default {
   components: { FormModal, CustomError },

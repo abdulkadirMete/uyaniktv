@@ -1,14 +1,22 @@
 <template>
     <div>
-        <div
-            class="datetime"
-            :class="{ activeHeader: isCurrentDate(guideObject.day) }"
-            @click="handleSingularOpen"
-            v-if="show || !isOpen"
-        >
-            <font-awesome-icon icon="fa-solid fa-calendar-days" />
-            <div class="date">
-                {{ readableDateFormatter(guideObject.day) }}
+        <div class="dateItemLeft">
+            <div
+                ref="dateItemRef"
+                class="datetime"
+                :class="{ activeHeader: isCurrentDay }"
+                @click="handleSingularOpen"
+                v-if="show || !isOpen"
+            >
+                <font-awesome-icon icon="fa-solid fa-calendar-days" />
+                <div class="date">
+                    {{ readableDateFormatter(guideObject.day) }}
+                </div>
+                <font-awesome-icon
+                    icon="fa-solid fa-circle-chevron-down"
+                    class="switchDateIcon"
+                    :class="{ turn: isOpen }"
+                />
             </div>
         </div>
         <!-- dropdown menu -->
@@ -19,7 +27,7 @@
                     <date-item
                         :unixtime="item.unixtime"
                         :program="item.program"
-                        :isActive="false"
+                        :isActive="item.unixtime === currentProgramUnix"
                     />
                 </div>
             </div>
@@ -28,34 +36,43 @@
 </template>
 <script>
 import { ref } from "vue";
+import { readableDateFormatter } from "../../../../../helpers/momentHelpers";
 import DateItem from "./DateItem.vue";
-import { readableDateFormatter } from "../../../../../helpers/helpers";
-import moment from "moment";
+import { onMounted, onBeforeUnmount } from "vue";
 
 export default {
     props: {
         guideObject: Object,
         isOpen: Boolean,
+        isCurrentDay: Boolean,
+        currentProgramUnix: String,
     },
-    setup(props, { emit }) {
+    setup({ isCurrentDay, isOpen }, { emit }) {
+        const onceTrigger = ref(true);
+        const dateItemRef = ref(null);
         const show = ref(false);
-        const timeDif = ref();
-
         const handleSingularOpen = () => {
             emit("toggleOpen");
             show.value = !show.value;
         };
-        const isCurrentDate = (date) => {
-            return moment().day() === moment(date, "YYYY-MM-DD").day();
-        };
 
+        onMounted(() => {
+            if (dateItemRef.value) {
+                isCurrentDay && dateItemRef.value.click();
+            }
+        });
 
+        onBeforeUnmount(() => {
+            emit("close");
+        });
 
         return {
             readableDateFormatter,
             show,
             handleSingularOpen,
-            isCurrentDate,
+            onceTrigger,
+            dateItemRef,
+            onBeforeUnmount,
         };
     },
     components: { DateItem },
@@ -116,17 +133,31 @@ export default {
 }
 
 .activeHeader {
-    border-left: 5px solid var(--color-success-green);
+    background-color: #407385;
+}
+
+.activeHeader > div {
+    color: var(--color-white);
+    font-weight: 600;
+}
+
+.switchDateIcon {
+    font-size: 1.25rem;
+    margin-left: auto;
+    transition: all 0.4s ease-in-out;
+}
+
+.turn {
+    transform: rotate(180deg);
 }
 </style>
 
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-    transition: all 0.3s linear;
 }
 .fade-enter,
 .fade-leave-to {
-    height: 0;
+    opacity: 0;
 }
 </style>

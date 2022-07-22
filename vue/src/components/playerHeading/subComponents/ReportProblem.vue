@@ -38,7 +38,7 @@ import CustomError from "../../authForms/subComponents/CustomError.vue";
 import { ref } from "vue";
 import store from "../../../store";
 import { notify } from "@kyvg/vue3-notification";
-import { notifyMaker } from "../../../helpers/helpers";
+import { notifyMaker } from "../../../helpers/utilHelpers";
 export default {
     components: { FormModal, CustomError },
     setup(props) {

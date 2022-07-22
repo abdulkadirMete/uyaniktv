@@ -100,10 +100,10 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { mapGetters } from "vuex";
 import { defaultAvatar } from "../../data/data";
-import { getElementPosition, setElementPosition } from "../../helpers/helpers";
+import { getElementPosition, setElementPosition } from "../../helpers/utilHelpers";
 import store from "../../store";
 import FormModal from "../formFragments/FormModal.vue";
-import { daysRemaining } from "../../helpers/helpers";
+import { daysRemaining } from "../../helpers/momentHelpers";
 
 export default {
     components: { FormModal, Toggle },

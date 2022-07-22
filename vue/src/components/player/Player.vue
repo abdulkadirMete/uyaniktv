@@ -226,7 +226,7 @@ import {
     getElementPosition,
     secondToStringDate,
     setElementPosition,
-} from "../../helpers/helpers";
+} from "../../helpers/utilHelpers";
 import store from "../../store";
 import PlayerChannels from "./subComponents/playerChannels/PlayerChannels.vue";
 import StreamDates from "./subComponents/playerFeatures/StreamDates.vue";

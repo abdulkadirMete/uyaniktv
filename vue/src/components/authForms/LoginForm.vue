@@ -84,7 +84,7 @@ import router from "../../router";
 import { loginValidation } from "../../data/validitionVars";
 import CustomError from "./subComponents/CustomError.vue";
 import { ref } from "vue";
-import { notifyMaker } from "../../helpers/helpers";
+import { notifyMaker } from "../../helpers/utilHelpers";
 import { notify } from "@kyvg/vue3-notification";
 
 // import the styling for the toast

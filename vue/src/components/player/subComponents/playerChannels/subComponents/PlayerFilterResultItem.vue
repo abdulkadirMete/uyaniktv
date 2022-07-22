@@ -31,7 +31,7 @@
 <script>
 import { notify } from "@kyvg/vue3-notification";
 import { ref, onBeforeMount } from "vue";
-import { notifyMaker } from "../../../../../helpers/helpers";
+import { notifyMaker } from "../../../../../helpers/utilHelpers";
 
 export default {
     props: {
