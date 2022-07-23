@@ -47,8 +47,7 @@ export default {
         isCurrentDay: Boolean,
         currentProgramUnix: String,
     },
-    setup({ isCurrentDay, isOpen }, { emit }) {
-        const onceTrigger = ref(true);
+    setup({ isCurrentDay }, { emit }) {
         const dateItemRef = ref(null);
         const show = ref(false);
         const handleSingularOpen = () => {
@@ -70,7 +69,6 @@ export default {
             readableDateFormatter,
             show,
             handleSingularOpen,
-            onceTrigger,
             dateItemRef,
             onBeforeUnmount,
         };
@@ -153,9 +151,9 @@ export default {
 </style>
 
 <style scoped>
-.fade-enter-active,
+/* .fade-enter-active,
 .fade-leave-active {
-}
+} */
 .fade-enter,
 .fade-leave-to {
     opacity: 0;

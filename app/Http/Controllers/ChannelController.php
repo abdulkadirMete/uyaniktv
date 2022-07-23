@@ -42,9 +42,11 @@ class ChannelController extends Controller
 
         $guideArray = prepareChannelGuide();
 
-        foreach ($guideArray['Channels']['Channel'] as $channel) {
-            if ($channel['Name'] === $request->listKey) {
-                return response($channel);
+        if ($guideArray) {
+            foreach ($guideArray['Channels']['Channel'] as $channel) {
+                if ($channel['Name'] === $request->listKey) {
+                    return response($channel);
+                }
             }
         }
 

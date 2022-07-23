@@ -19,7 +19,6 @@ import { mapGetters, useStore } from "vuex";
 import Player from "../components/player/Player.vue";
 import PlayerHeading from "../components/playerHeading/PlayerHeading.vue";
 import ReportProblem from "../components/playerHeading/subComponents/ReportProblem.vue";
-import store from "../store";
 
 export default {
     components: {
@@ -43,8 +42,8 @@ export default {
         watch(
             () => route.params.id,
             (newId) => {
-                // route param undefined then return
-                if (!newId) return;
+              
+                if (!newId) return;  // route param undefined then return
                 loading(true);
                 // get channel
                 store
@@ -54,8 +53,10 @@ export default {
                         store.commit("toggleGuideLoading", true);
 
                         store
-                            .dispatch("fetchGuide").then(() =>  store.commit("toggleGuideLoading", false))
-                            .catch((err) => console.log(err));
+                            .dispatch("fetchGuide")
+                            .finally(() =>
+                                store.commit("toggleGuideLoading", false)
+                            );
                     })
                     .catch((err) => console.log(err));
             },

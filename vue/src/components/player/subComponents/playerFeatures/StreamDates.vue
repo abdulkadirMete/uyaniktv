@@ -3,15 +3,16 @@
         <CustomListHeading heading="Yayın akışı" :red="true" />
         <LoadingDot v-if="store.getters.getGuideLoading" />
         <DateHeader
-            v-else
+            v-else-if="store.getters.getGuide"
             :guideObject="guide"
             v-for="guide in processedData"
             @toggleOpen="toggleOpen"
             @close="close"
             :isOpen="isOpen"
-            :isCurrentDay="currentDay.day === guide.day"
+            :isCurrentDay="currentDay?.day === guide?.day"
             :currentProgramUnix="currentProgram.unixtime"
         />
+        <span v-else="!isGuideExist">Geçerli yayın bilgisi yok</span>
     </div>
 </template>
 <script>
@@ -34,13 +35,19 @@ export default {
         const currentDay = ref("");
         const currentProgram = ref("");
         const isOpen = ref(false);
+        const isGuideExist = ref(true);
 
         watch(
             () => store.getters.getGuide,
             (guide) => {
-                processedData.value = processData(guide);
-                currentDay.value = getCurrentDayGuide(processedData.value);
-                currentProgram.value = getCurrentProgram(currentDay.value);
+                try {
+                    processedData.value = processData(guide);
+                    currentDay.value = getCurrentDayGuide(processedData.value);
+                    currentProgram.value = getCurrentProgram(currentDay.value);
+                } catch (error) {
+                    isGuideExist.value = ref(false);
+                    store.commit("toggleGuideLoading", false);
+                }
             }
         );
 
@@ -60,6 +67,7 @@ export default {
             currentDay,
             currentProgram,
             close,
+            isGuideExist,
         };
     },
 };

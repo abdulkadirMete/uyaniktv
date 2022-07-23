@@ -8,7 +8,6 @@ import Footer from "../components/footer/Footer.vue";
 
 <template>
     <Hero />
-    <Streams />
     <RouterView :key="$route.fullPath" />
     <ChannelList />
     <Footer />
