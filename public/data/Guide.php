@@ -21,11 +21,11 @@ if ($res) {
 	$zip->extractTo($path);
 	$zip->close();
 	// convert json
-	$xmlfile = file_get_contents('./public/data/tvguide.xml');
+	$xmlfile = file_get_contents('tvguide.xml');
 	$xmlObject = simplexml_load_string($xmlfile);
 	$json = json_encode($xmlObject);
 	// storage as json
-	file_put_contents('./public/data/tvguide.json', $json);
+	file_put_contents('tvguide.json', $json);
 
 
 	echo "<strong>$file</strong> extracted to <strong>$path</strong><br>";
